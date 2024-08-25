@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .list {
+            column-count: 5;
+            column-gap: 10px;
+            width: 1280px;
+            padding: 1rem;
+        }
+
+        .box {
+            margin-bottom: 10px;
+            break-inside: avoid;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .box img {
+            border-radius: 14px;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="list" id="list">
+        </div>
+    </div>
+
+    <script>
+        // 图片源数组
+        const images = ['./1.jpeg', './2.jpeg', './3.jpeg', './4.webp', './5.webp', './6.webp', './7.jpeg', './8.webp', './9.jpeg', './10.jpeg'];
+
+        // 创建一个包含50个元素的数组，并随机打乱
+        const elements = [];
+        for (let i = 0; i < 50; i++) {
+            const randomIndex = Math.floor(Math.random() * images.length);
+            elements.push(images[randomIndex]);
+        }
+
+        // 将元素随机插入页面
+        const list = document.getElementById('list');
+        elements.forEach(src => {
+            const box = document.createElement('div');
+            box.className = 'box';
+            const img = document.createElement('img');
+            img.src = src;
+            box.appendChild(img);
+            list.appendChild(box);
+        });
+    </script>
+</body>
+
+</html>

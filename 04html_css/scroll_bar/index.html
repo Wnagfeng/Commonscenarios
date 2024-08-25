@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Hiding Scrollbar</title>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* 容器样式 */
+        .scroll-container {
+            width: 400px;
+            height: 300px;
+            overflow-y: scroll;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* 初始隐藏滚动条 */
+        .scroll-container::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .scroll-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: transparent;
+        }
+
+        /* 显示滚动条的样式 */
+        .scroll-container.show-scrollbar::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+
+        .scroll-container.show-scrollbar::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 6px;
+        }
+
+        /* 内容填充 */
+        .content {
+            height: 600px;
+            /* 超过容器的高度以触发滚动条 */
+            background: linear-gradient(to bottom, #ffcccc, #ccffcc);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scroll-container" id="scroll-container">
+        <div class="content">
+            <h2>Auto-Hiding Scrollbar Example</h2>
+            <p>This is an example of a scrollbar that hides automatically when not in use.</p>
+            <p>Scroll down to see the scrollbar appear, and then watch as it disappears after a few seconds of
+                inactivity.</p>
+            <p>The content is deliberately made longer than the container to demonstrate the scrollbar functionality.
+            </p>
+            <p>You can customize the timing and styles as per your design requirements.</p>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('scroll-container');
+        let timeout;
+
+        container.addEventListener('scroll', () => {
+            // 滚动时显示滚动条
+            container.classList.add('show-scrollbar');
+
+            // 清除之前的超时
+            clearTimeout(timeout);
+
+            // 设置超时，在滚动停止后隐藏滚动条
+            timeout = setTimeout(() => {
+                container.classList.remove('show-scrollbar');
+            }, 1000); // 1秒后隐藏滚动条
+        });
+    </script>
+</body>
+
+</html>
