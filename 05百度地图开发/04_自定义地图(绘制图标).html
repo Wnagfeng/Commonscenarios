@@ -1,0 +1,103 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 本节展示 如何自定义 icon展示 -->
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+        }
+
+        .anchorBL {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!--  -->
+    <div class="box" id="map"></div>
+    <script>
+        function init() {
+            console.log(window.BMapGL)
+            var map = new BMapGL.Map("map")
+            var point = new BMapGL.Point(116.148452, 32.31115)
+            map.centerAndZoom(point, 100)
+            map.enableScrollWheelZoom(true)
+            map.setHeading(0)
+            map.setTilt(70)
+            var zoomCtrl = new BMapGL.ZoomControl()
+            map.addControl(zoomCtrl)
+            map.setMapStyleV2({
+                styleId: '052d0ea164bf6e26b3200f8acffff818'
+            });
+            // 1.绘制点
+            // 参数 url size opstion
+            var Myicon = new BMapGL.Icon('./location.png', new BMapGL.Size(60, 60), {
+                // anchor表示偏移量
+                // anchor: new BMapGL.Size(-180, -10),
+                // imageOffset 相当于css中的background-postion功能
+                imageOffset: new BMapGL.Size(0, 0)
+            })
+            // 你需要绘制的点 和你的icon
+            var maker = new BMapGL.Marker(point, { icon: Myicon })
+            // 弹窗功能
+            maker.addEventListener("click", function () {
+                var opts = {
+                    width: 250,     // 信息窗口宽度
+                    height: 100,    // 信息窗口高度
+                    title: "标题",  // 信息窗口标题
+                }
+                var infoWindow = new BMapGL.InfoWindow("内容", opts);  // 创建信息窗口对象
+                map.openInfoWindow(infoWindow, point);        // 打开信息窗口
+            });
+            // 添加到地图中去
+            map.addOverlay(maker);
+            // 2.绘制线
+            var polyline = new BMapGL.Polyline([
+                new BMapGL.Point(116.148452, 32.31115),
+                new BMapGL.Point(1167, 32.31144),
+            ],
+                { strokeColor: "blue", strokeWeight: 6, strokeOpacity: 0.5 }
+            );
+            map.addOverlay(polyline);
+            // 3.绘制区域矩形
+            var Polygon = new BMapGL.Polygon([
+                new BMapGL.Point(116.148452, 32.31115),
+                new BMapGL.Point(116.148499, 32.31144),
+                new BMapGL.Point(116.148410, 32.31130),
+                new BMapGL.Point(116.148452, 32.31115),
+            ],
+                { strokeColor: "blue", strokeWeight: 6, strokeOpacity: 0.5, fillColor: "red" }
+            );
+            map.addOverlay(Polygon);
+            // 4.绘制文字
+            var label = new BMapGL.Label("欢迎来到我的家乡")
+            label.setStyle({
+                with: "100px",
+                height: "100px"
+            })
+            // 还有很多事件等等在官方文档中
+            map.addOverlay(label)
+        }
+        window.onload = function () {
+            var script = document.createElement("script")
+            script.src = "https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=rF2lf457b29meoDLWojL6v1hovoeJKXg&callback=init"
+            document.body.appendChild(script)
+        }
+
+    </script>
+
+</body>
+
+</html>

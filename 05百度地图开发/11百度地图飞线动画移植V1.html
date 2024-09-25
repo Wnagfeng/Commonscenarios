@@ -1,0 +1,103 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=G1LFyjrNGIkns5OfpZnrCGAKxpycPLwb"></script>
+    <script src="https://mapv.baidu.com/gl/examples/static/common.js"></script>
+    <script type="text/javascript" src="https://mapv.baidu.com/build/mapv.js"></script>
+    <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.54/dist/mapvgl.min.js"></script>
+    <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.53/dist/mapvgl.threelayers.min.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #map_container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+        想要完成飞线动画这个案例我们需要
+        先去绘制一些线段
+        在飞线动画中我们的线是静止的而点是动态移动的
+     -->
+    <div id="map_container"></div>
+    <script>
+        var map = initBMap()
+        var data = initData()
+        SetData(map, data)
+        function initBMap() {
+            var map = initMap({
+                tilt: 0,
+                center: [108.154518, 36.643346],
+                zoom: 5,
+                style: darkStyle
+            })
+            return map
+        }
+        // 首先我们需要确定两个位置 开始城市和目标城市
+        function initData() {
+            // 随机生成一些开始点位
+            var randomCount = 100
+            // cities表示我们的开始城市
+            var cities = ["北京", "天津", "上海", "重庆", "石家庄", "太原", "呼和浩特", "哈尔滨", "长春", "沈阳", "济南", "南京", "合肥", "杭州", "南昌", "福州", "郑州", "武汉", "长沙", "广州", "南宁", "西安", "银川", "兰州", "西宁", "乌鲁木齐", "成都", "贵阳", "昆明", "拉萨", "海口"
+            ]
+            var data = []
+            // 获取到目标城市
+            var TargetCity = mapv.utilCityCenter.getCenterByCityName("北京")
+            // 创建贝塞尔曲线对象
+            var curve = new mapvgl.BezierCurve()
+            for (var i = 1; i < randomCount; i++) {
+                var Startcity = mapv.utilCityCenter.getCenterByCityName(cities[parseInt(Math.random() * cities.length)])
+                // 生成贝塞尔曲线对象
+                curve.setOptions({
+                    start: [Startcity.lng, Startcity.lat],
+                    end: [TargetCity.lng, TargetCity.lat]
+                })
+                var curveData = curve.getPoints()
+                data.push({
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: curveData
+                    },
+                })
+            }
+            console.log(data)
+            return data
+        }
+        function SetData(map, data) {
+            var view = new mapvgl.View({ map })
+            var lineLayer = new mapvgl.LineLayer({
+                color: 'rgba(55, 50, 250, 0.3)',
+                blend: 'lighter'
+            })
+            view.addLayer(lineLayer)
+            lineLayer.setData(data)
+            // 创建运动的点
+            var linePointLayer = new mapvgl.LinePointLayer({
+                size: 8,
+                speed: 20,
+                color: 'rgba(255, 255, 0, 0.6)',
+                animationType: mapvgl.LinePointLayer.ANIMATION_TYPE_SMOOTH,//点的动画类型
+                shapeType: mapvgl.LinePointLayer.SHAPE_TYPE_CIRCLE,//点交汇时的处理方式
+                blend: 'lighter'
+            })
+            view.addLayer(linePointLayer)
+            linePointLayer.setData(data)
+        }
+    </script>
+</body>
+
+</html>

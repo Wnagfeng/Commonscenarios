@@ -1,0 +1,54 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=rF2lf457b29meoDLWojL6v1hovoeJKXg">
+        </script>
+    <!-- the product is study BaiduMap -->
+    <!-- Touch Time 2024.2.3-->
+    <!-- write by Joon -->
+    <!-- 引入库的时候需要替换您的AK -->
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+        }
+
+        #map {
+            width: 500px;
+            height: 500px;
+        }
+
+        .anchorBL {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box" id="map"></div>
+    <script>
+        console.log(window.BMapGL)//this is BaiduMap object
+        // 初始化百度地图对象
+        //                      element id
+        var map = new BMapGL.Map("map")
+        var point = new BMapGL.Point(116.148452, 32.31115)//您的经纬度
+        map.centerAndZoom(point, 100)//经纬度和地图的显示级别(放大或者缩小)
+        map.enableScrollWheelZoom(true)//开启滑轮放大
+        //  console.log have waring ？ 不要管他 等我们上线后自动会消除 
+
+    </script>
+
+</body>
+
+</html>

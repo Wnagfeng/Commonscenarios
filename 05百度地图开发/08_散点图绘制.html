@@ -1,0 +1,135 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=rF2lf457b29meoDLWojL6v1hovoeJKXg">
+        </script>
+    <script src="https://mapv.baidu.com/gl/examples/static/common.js"></script>
+    <script src="https://mapv.baidu.com/build/mapv.js"></script>
+    <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.54/dist/mapvgl.min.js"></script>
+    <!-- 百度地图为我们提供了mapv和mapgl来辅助我们开发百度地图可视化 -->
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+        }
+
+        #map_container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .anchorBL {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box" id="map_container"></div>
+    <script>
+        // 想做可视化大体上分为四步走
+        // 1.初始化地图 -- mapv为我们提供了初始化地图的方法
+        var map = initMap({
+            center: [116.148452, 32.31115],
+            zoom: 10,
+            style: snowStyle,
+            tilt: 0
+        })
+        // 2.准备数据源
+        var data = []//散点图数据源
+        // 你需要绘制散点的城市
+        var citys = [
+            '北京', '天津', '上海', '重庆', '石家庄', '太原', '呼和浩特', '哈尔滨',
+            '长春', '沈阳', '济南', '南京', '合肥', '杭州', '南昌', '福州', '郑州',
+            '武汉', '长沙', '广州', '南宁', '西安', '银川', '兰州', '西宁', '乌鲁木齐',
+            '成都', '贵阳', '昆明', '拉萨', '海口'
+        ];
+        // 你需要绘制的散点的城市的经纬度
+        // mapv中为我们提供了根据城市的名称去获取到城市的经纬度
+        // var cityCenter = mapv.utilCityCenter.getCenterByCityName(citys[0])
+        // console.log(cityCenter) --可以获取到坐标
+        // 散点图需要的数据源是什么类型的呢
+        /* 
+        {
+            geometry: {
+                type: "Point",
+                coordiantes: [116.148452, 32.31115]
+            }
+        }
+         */
+        // 开始批量获取到经纬度
+        var randomCount = 700;//这里的你需要的散点图个数
+        function initData() {
+            while (randomCount--) {
+                //                                                              随机获取到城市
+                var cityCenter = mapv.utilCityCenter.getCenterByCityName(citys[parseInt(Math.random() * citys.length, 10)]);
+                data.push({
+                    geometry: {
+                        type: 'Point',
+                        // 为啥进行便宜 目的是获取更多的点 这是模拟数据而已 实际开发还是要以后端返回的数据为主
+                        coordinates: [cityCenter.lng - 2 + Math.random() * 4, cityCenter.lat - 2 + Math.random() * 4]
+                    },
+                    // properties表示什么意思
+                    /*
+                    假如说你做的 是电商项目的散点图 其实这个properties就是你的销售额 我们根据销售额的大小来定制点的大小
+                     这是模拟数据而已 实际开发还是要以后端返回的数据为主
+                     */
+                    properties: {
+                        count: Math.random() * 100
+                    }
+                });
+            }
+            return data;
+        }
+        initData()
+        // 3.绘制数据源
+        // 3.1 生成mapvgl的view 你可以理解为ps中的蒙版
+        var view = new mapvgl.View({ map })
+        // 3.2 初始化mapvgl中的 PointLayer对象
+        // 3.2.1 intensity 是mapvgl为我们提供的控制点大小以及颜色的控件
+        var intensity = new mapvgl.Intensity({
+            max: 100,
+            min: 0,
+            // gradient 渐变的意思0-1 也就是随机取值
+            gradient: {
+                0: 'rgb(25, 66, 102, 0.8)',
+                0.3: 'rgb(145, 102, 129, 0.8)',
+                0.7: 'rgb(210, 131, 137, 0.8)',
+                1: 'rgb(248, 177, 149, 0.8)'
+            },
+            maxSize: 30,
+            minSize: 5
+        });
+        var pointLayer = new mapvgl.PointLayer({
+            // 在这里定制您的点
+            size: function (data) {
+                //intensity 通过控件生成size
+                return intensity.getSize(data.properties.count);
+            },
+            color: function (data) {
+                // intensity 通过控件生成color
+                return intensity.getColor(data.properties.count);
+            }
+            // intensity 会自动帮我们计算颜色和大小
+        })
+        // 3.3 将point对象加入到view中
+        view.addLayer(pointLayer)
+        // 4.4 将data与point与数据进行绑定
+        pointLayer.setData(data)
+
+    </script>
+
+</body>
+
+</html>
