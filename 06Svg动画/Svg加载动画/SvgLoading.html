@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .cls-1 {
+            fill: none;
+            stroke: #000;
+            stroke-miterlimit: 10;
+            stroke-width: 2px;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            transition: background-color 1s ease-in-out;
+
+        }
+
+        .container {
+            width: 1200px;
+            height: 500px;
+            transition: opacity 1s ease;
+        }
+
+        svg path {
+            stroke: #c5ba9a !important;
+            stroke-linecap: round;
+            stroke-width: 3px;
+        }
+
+        #happy_h1 {
+            stroke-dasharray: 364;
+            stroke-dashoffset: 364;
+            animation: draw 0.5s linear 0s forwards;
+        }
+
+        #happy_h2 {
+            stroke-dasharray: 135;
+            stroke-dashoffset: 135;
+            animation: draw 0.5s linear 0.5s forwards;
+        }
+
+        #happy_a {
+            stroke-dasharray: 76;
+            stroke-dashoffset: 76;
+            animation: draw 0.5s linear 1s forwards;
+        }
+
+        #happy_p1 {
+            stroke-dasharray: 64;
+            stroke-dashoffset: 64;
+            animation: draw 0.5s linear 1.5s forwards;
+        }
+
+        #happy_p2 {
+            stroke-dasharray: 3;
+            stroke-dashoffset: 3;
+            animation: draw 0.5s linear 2s forwards;
+        }
+
+        #happy_y {
+            stroke-dasharray: 73;
+            stroke-dashoffset: 73;
+            animation: draw 0.5s linear 2.5s forwards;
+        }
+
+        #new_n {
+            stroke-dasharray: 293;
+            stroke-dashoffset: 293;
+            animation: draw 0.5s linear 3s forwards;
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <svg id="hello" viewBox="0 0 253.8 89.5">
+            <defs></defs>
+            <path id="happy_h1" class="cls-1"
+                d="M69.9,282.1c1.9-10.4,7.3-19.9,12.5-29.2,3.7-6.5,8.8-13.9,16.4-13.7a6.8,6.8,0,0,1,4.3,1.5c2.3,2.1,2.2,5.7,1.9,8.7a166.7,166.7,0,0,1-12.3,45.5c-.5-11.4,4.9-22.2,10.1-32.3,2.3-4.4,4.7-8.9,8.1-12.5s8-6.5,13-6.5a5.3,5.3,0,0,1,3,.7c2,1.4,1.7,4.4,1.2,6.8l-9,41.6A67.9,67.9,0,0,1,142,248.3c3.4-2.9,8-5.6,12.2-3.8-1.7,14.9-11.4,29.3-7.9,43.9.5,2,1.3,4.1,3.2,5s5.2-.3,6.5-2.4,1.7-4.8,2-7.4"
+                transform="translate(-44.3 -237.7)" />
+            <path id="happy_h2" class="cls-1"
+                d="M163.6,275.9a23.4,23.4,0,0,1,13.8-6.7c-3.8,6.2-7.7,12.6-9.3,19.8a5.3,5.3,0,0,0,.2,3.9,3.8,3.8,0,0,0,2.5,1.5c3.4.7,6.7-1.5,9.5-3.7a100.6,100.6,0,0,0,18.6-19.4,29.2,29.2,0,0,0-7.2,14.6,11.7,11.7,0,0,0,.5,7.4c1.1,2.3,3.6,4,6,3.5s3.3-1.9,4.6-3.4a149.8,149.8,0,0,0,8.7-12.2"
+                transform="translate(-44.3 -237.7)" />
+            <path id="happy_a" class="cls-1"
+                d="M231.9,277.7c-1-6.1-8.1-10.4-14-8.5-2,.6-4,2.1-4.3,4.2a5.5,5.5,0,0,0,1.2,3.9c1.8,2.3,4.7,3.4,7.4,4.4s5.6,2.1,7.3,4.4,1.7,6.3-.9,7.7a7.5,7.5,0,0,1-3.3.6,57.9,57.9,0,0,1-7.2-.4,7.8,7.8,0,0,1-4.7-1.8c-1.2-1.1-1.6-3.4-.3-4.4"
+                transform="translate(-44.3 -237.7)" />
+            <path id="happy_p1" class="cls-1"
+                d="M240.7,280.1a14.7,14.7,0,0,1,6.8-9.2c1.8-1.1,4.6-1.5,5.8.2s.4,3.1-.1,4.5a108.2,108.2,0,0,1-6.5,14.3,6.6,6.6,0,0,0-1.1,3.5,4.2,4.2,0,0,0,4.2,3.2,9.2,9.2,0,0,0,5.1-2.3,23.5,23.5,0,0,0,6-7.3"
+                transform="translate(-44.3 -237.7)" />
+            <path id="happy_p2" class="cls-1" d="M253.6,257.4a.9.9,0,0,0,.5,1.1,2.2,2.2,0,0,0,1-1.1"
+                transform="translate(-44.3 -237.7)" />
+            <path id="happy_y" class="cls-1"
+                d="M290.2,278.9c1.5-1.5,3.1-3.7,2.3-5.7s-3.3-2.2-5.4-2.2a22.5,22.5,0,0,0-11.9,3.3c-3.5,2.4-6.1,6.2-6.2,10.4a7,7,0,0,0,.9,4,8.5,8.5,0,0,0,2.6,2.4c7.9,5,19.4,3.3,25.5-3.8"
+                transform="translate(-44.3 -237.7)" />
+            <path id="new_n" class="cls-1" d="M44.5,332.2a1332.9,1332.9,0,0,1,292-11.2"
+                transform="translate(-44.3 -237.7)" />
+        </svg>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            document.querySelector('.container').style.opacity = '0';
+            document.body.style.backgroundColor = 'white'; // 将背景颜色变为白色F
+        }, 3500); // 根据需要调整延迟时间
+    </script>
+</body>
+
+</html>

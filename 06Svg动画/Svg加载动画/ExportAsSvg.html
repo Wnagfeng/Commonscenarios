@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draw and Export SVG</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            border: 2px solid #333;
+            cursor: crosshair;
+            background-color: #fff;
+            margin-bottom: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 600px) {
+            canvas {
+                width: 90%;
+                height: auto;
+            }
+
+            button {
+                width: 90%;
+                font-size: 14px;
+            }
+        }
+
+        /* 打字机效果样式 */
+        #typingText {
+            border-right: 2px solid;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="typingText" data-text="Draw and Export SVG."></h1>
+    <h2 id="typingText2" data-text="Write By CoderJoon."></h2>
+    <p id="typingText3" data-text="你可以通过网页绘制您的效果，并将其导出为SVG文件。"></p>
+
+    <canvas id="drawingCanvas" width="600" height="400"></canvas>
+    <button id="exportBtn">Export as SVG</button>
+
+    <script>
+        // 打字机效果实现
+        function typeText(elements, delay) {
+            let index = 0;
+
+            function typeNext() {
+                if (index < elements.length) {
+                    const element = elements[index];
+                    const text = element.getAttribute("data-text");
+                    let charIndex = 0;
+
+                    const typeInterval = setInterval(() => {
+                        if (charIndex < text.length) {
+                            element.innerText += text.charAt(charIndex);
+                            charIndex++;
+                        } else {
+                            clearInterval(typeInterval);
+                            index++;
+                            setTimeout(typeNext, 500); // 等待0.5秒后打下一个
+                        }
+                    }, 100);
+                }
+            }
+            typeNext();
+        }
+
+        // 初始化打字机效果
+        typeText([document.getElementById("typingText"), document.getElementById("typingText2"), document.getElementById("typingText3")]);
+
+        // Canvas 绘制逻辑
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let isDrawing = false;
+        let paths = []; // 存储多个路径
+        let currentPath = []; // 当前路径
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            currentPath.push({ x: e.offsetX, y: e.offsetY });
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const { offsetX, offsetY } = e;
+            ctx.lineTo(offsetX, offsetY);
+            ctx.stroke();
+            currentPath.push({ x: offsetX, y: offsetY });
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+            ctx.beginPath();
+            if (currentPath.length > 0) {
+                paths.push(currentPath); // 将当前路径添加到路径数组中
+                currentPath = []; // 重置当前路径
+            }
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const svgContent = createSVG(paths);
+            downloadSVG(svgContent);
+        });
+
+        function createSVG(paths) {
+            let svgPaths = paths.map(points => {
+                let d = `M ${points[0].x} ${points[0].y} `;
+                for (let i = 1; i < points.length; i++) {
+                    d += `L ${points[i].x} ${points[i].y} `;
+                }
+                return `<path d="${d}" fill="none" stroke="black" stroke-width="2"/>`;
+            }).join('');
+            return `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}">${svgPaths}</svg>`;
+        }
+
+        function downloadSVG(svgContent) {
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'drawing.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+
+</html>

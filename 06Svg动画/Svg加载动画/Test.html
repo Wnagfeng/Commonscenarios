@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Animation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        svg {
+            width: 80%;
+            height: auto;
+        }
+
+        path {
+            fill: none;
+            stroke: black;
+            stroke-width: 2;
+            stroke-dasharray: 0;
+            stroke-dashoffset: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+        <path
+            d="M 69 21 L 69 21 L 69 21 L 69 21 L 69 21 L 69 21 L 69 21 L 69 21 L 69 21 L 68 25 L 66 28 L 64 30 L 59 38 L 56 42 L 44 56 L 37 63 L 27 71 L 11 82 L 4 87 L -1 76 L 1 75 L 7 72 L 10 69 L 11 68 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 12 67 L 13 67 L 15 64 L 18 62 L 21 59 L 32 51 L 46 43 L 88 30 L 112 25 L 133 23 L 163 23 L 176 23 L 197 28 L 203 31 L 210 34 L 224 45 L 228 49 L 239 66 L 245 75 L 248 84 L 255 100 L 257 108 L 265 118 L 270 136 L 270 142 L 268 159 L 266 165 L 263 169 L 257 175 L 255 176 L 251 179 L 248 179 L 244 179 L 237 179 L 231 179 L 221 178 L 216 175 L 215 175 L 210 172 L 209 172 L 208 170 L 206 168 L 204 167 L 203 163 L 203 162 L 203 160 L 203 155 L 204 152 L 206 148 L 207 147 L 208 147 L 211 147 L 212 147 L 214 147 L 214 147 L 215 147 L 216 147 L 216 147 L 219 147 L 221 135 L 223 135 L 224 135 L 224 135 L 224 135 L 224 135 L 224 135 L 224 135 L 224 135 L 225 135 L 225 135 L 226 135 L 226 135 L 226 135 L 227 135 L 228 135 L 228 135 L 228 135 L 228 135 L 228 135 L 228 135 L 228 135 "
+            fill="none" stroke="black" stroke-width="2" />
+    </svg>
+
+    <script>
+        const paths = document.querySelectorAll('path');
+
+        paths.forEach((path, index) => {
+            const length = path.getTotalLength(); // 获取路径长度
+            path.style.strokeDasharray = length; // 设置 dasharray 为路径长度
+            path.style.strokeDashoffset = length; // 设置 dashoffset 为路径长度，隐藏路径
+
+            // 动画时长，可以为每个路径设置不同的时长
+            const duration = 2000; // 动画时长
+            const delay = index * duration; // 延迟时间
+
+            // 添加动画
+            setTimeout(() => {
+                path.animate([
+                    { strokeDashoffset: length },
+                    { strokeDashoffset: 0 }
+                ], {
+                    duration: duration,
+                    easing: 'ease-in-out',
+                    fill: 'forwards'
+                });
+            }, delay);
+        });
+    </script>
+</body>
+
+</html>
