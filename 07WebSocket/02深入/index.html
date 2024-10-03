@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        #chat-container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        li:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        #form {
+            display: flex;
+            padding: 10px;
+            background: #fff;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #username-container {
+            margin-bottom: 15px;
+        }
+
+        input#username {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: calc(100% - 22px);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chat-container">
+        <div id="username-container">
+            <input type="text" id="username" placeholder="请输入用户名..." />
+            <button id="join-btn">加入聊天室</button>
+        </div>
+        <ul id="messages"></ul>
+        <form id="form" action="" style="display:none;">
+            <input id="input" autocomplete="off" placeholder="请输入消息..." />
+            <button>发送</button>
+        </form>
+    </div>
+
+    <script>
+        const socket = io(); // 连接到服务器
+
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+        const usernameInput = document.getElementById('username');
+        const joinButton = document.getElementById('join-btn');
+
+        // 监听连接成功
+        socket.on('connect', () => {
+            console.log('WebSocket 连接成功');
+        });
+
+        // 监听来自服务器的消息
+        socket.on('chat message', (data) => {
+            const item = document.createElement('li');
+            item.innerHTML = `<strong>${data.username}:</strong> ${data.message}`; // 显示消息内容和用户名
+            messages.appendChild(item); // 把消息添加到列表中
+            window.scrollTo(0, document.body.scrollHeight); // 滚动到最新消息
+        });
+
+        // 处理用户加入聊天室
+        joinButton.addEventListener('click', () => {
+            const username = usernameInput.value;
+            if (username) {
+                socket.emit('join', username); // 向服务器发送用户名
+                document.getElementById('username-container').style.display = 'none'; // 隐藏用户名输入
+                form.style.display = ''; // 显示消息输入
+                usernameInput.value = ''; // 清空用户名输入框
+            }
+        });
+
+        // 处理表单提交
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', { message: input.value }); // 发送消息到服务器
+                input.value = ''; // 清空输入框
+            }
+        });
+
+        // 监听断开连接
+        socket.on('disconnect', () => {
+            console.log('WebSocket 连接断开');
+        });
+    </script>
+</body>
+
+</html>

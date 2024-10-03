@@ -1,0 +1,22 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket(01起步)</title>
+</head>
+
+<body>
+    <script>
+        const ws = new WebSocket('ws://localhost:8080');
+        ws.addEventListener('open', function () {
+            console.log('WebSocket连接成功');
+            ws.send('message');
+        });
+        ws.addEventListener('message', function (event) {
+            console.log('收到服务器消息：', event.data);
+        });
+    </script>
+</body>
+
+</html>
