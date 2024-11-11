@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>大屏实时数据</title>
+    <style>
+        .heart {
+            font-size: 50px;
+            color: red;
+            animation: heartbeat 1s infinite;
+            display: inline-block;
+        }
+        
+        .dead {
+            animation: none;
+            color: gray;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        #dataDisplay {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="heart" class="heart">♥</div>
+    <div id="dataDisplay"></div>
+    <script>
+        const heart = document.getElementById('heart');
+        const dataDisplay = document.getElementById('dataDisplay');
+        let ws = null;
+        let heartbeatTimer = null;
+        const heartbeatInterval = 5000; // 心跳间隔5秒
+
+        function connect() {
+            ws = new WebSocket('ws://localhost:3000');
+            
+            ws.onopen = () => {
+                console.log('连接成功');
+                heart.classList.remove('dead');
+                startHeartbeat();
+            };
+
+            ws.onclose = () => {
+                console.log('连接关闭');
+                heart.classList.add('dead');
+                clearInterval(heartbeatTimer);
+                setTimeout(connect, 3000); // 3秒后重连
+            };
+
+            ws.onerror = () => {
+                console.log('连接错误');
+                heart.classList.add('dead');
+            };
+
+            ws.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                
+                if (message.type === 'pong') {
+                    console.log('收到服务器心跳响应');
+                } else if (message.type === 'data') {
+                    // 更新大屏数据显示
+                    dataDisplay.textContent = `当前值: ${message.value.toFixed(2)}, 时间: ${message.timestamp}`;
+                }
+            };
+        }
+
+        function startHeartbeat() {
+            heartbeatTimer = setInterval(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send('ping');
+                }
+            }, heartbeatInterval);
+        }
+
+        // 初始连接
+        connect();
+    </script>
+</body>
+</html>
